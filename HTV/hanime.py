@@ -17,27 +17,31 @@ class HanimeTV:
         if email is None and password is None:
             self.session = ''
         else:
-            url = "{}/api/v3/sessions".format(self.host)
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0',
-                'Accept': 'application/json, text/plain, */*',
-                'Accept-Language': 'en-US,en;q=0.5',
-                'Referer': '{}/'.format(self.host),
-                'Content-Type': 'application/json;charset=utf-8',
-                'X-Directive': 'api',
-                'Connection': 'keep-alive',
-                'TE': 'Trailers'
-            }
-            data = {
-                "email":  str(email),
-                "password": str(password)
-            }
-            req = requests.post(url, headers=headers, json=data)
             try:
-                self.session = json.loads(req.text)["session_token"]
+                login = self.login(email, password)
+                self.session = login["session_token"]
             except:
                 print ("Invalid Credential")
                 sys.exit()
+
+    def login(self, email, password):
+        url = "{}/api/v3/sessions".format(self.host)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Referer': '{}/'.format(self.host),
+            'Content-Type': 'application/json;charset=utf-8',
+            'X-Directive': 'api',
+            'Connection': 'keep-alive',
+            'TE': 'Trailers'
+        }
+        data = {
+            "email": str(email),
+            "password": str(password)
+        }
+        req = requests.post(url, headers=headers, json=data)
+        return json.loads(req.text)
 
     def search(self, query):
         url = "https://thorin-us-east-1.searchly.com/hentai_videos/hentai_video/_search?from=0&size=48"
