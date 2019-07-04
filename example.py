@@ -1,12 +1,21 @@
 from HTV import HanimeTV
 
-# hentai = HanimeTV(email="EMAIL", password="PASS")
 hentai = HanimeTV()
+query = "Imouto Paradise"
+url = "https://hanime.tv/hentai-videos/imouto-paradise-1-ep-1"
 
 # SEARCH
-search = hentai.search("Imouto Paradise")
+search = hentai.search(query)
 print (search)
 
-# GET INFO & DATA
-get = hentai.get("https://hanime.tv/hentai-videos/imouto-paradise-1-ep-1")
-print (get)
+# GET INFO
+info = hentai.info(url)
+print (info)
+
+# GET STORYBOARDS
+storyboards = hentai.storyboards(url)
+print (storyboards)
+
+# GET DOWNLOAD (STILL NOT WORKING)
+download = hentai.download(url)
+print (download)
