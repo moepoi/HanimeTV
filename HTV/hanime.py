@@ -14,6 +14,7 @@ License MIT
 class HanimeTV:
     def __init__(self, email=None, password=None):
         self.host = "https://members.hanime.tv"
+        self.mapi = "https://mapi.htvanime.com"
         if email is None and password is None:
             self.session = ''
         else:
@@ -38,6 +39,7 @@ class HanimeTV:
         return json.loads(req.text)
 
     def login(self, email, password):
+        """
         url = self.host + "/api/v3/sessions"
         captcha_token = "???" # NEED CAPTCHA TOKEN
         pre_session = self.pre_session(captcha_token)
@@ -56,6 +58,22 @@ class HanimeTV:
             "password": str(password),
             "now": pre_session["now"],
             "sign_in_token": pre_session["sign_in_token"]
+        }
+        """
+        url = self.mapi + "/api/v4/sessions"
+        headers = {
+            'accept': 'application/json, text/plain, */*',
+            'x-directive': 'api',
+            'x-claim': '1562263093',
+            'x-signature': 'e0e238dfc474b36b13f4f2028e5529e5c43d351ebdad0b223941e2b454d25f09',
+            'x-session-token': '',
+            'content-type': 'application/json;charset=utf-8',
+            'accept-encoding': 'gzip',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0',
+        }
+        data = {
+            "burger": email,
+            "fries": password
         }
         req = requests.post(url, headers=headers, json=data)
         return json.loads(req.text)
@@ -115,6 +133,7 @@ class HanimeTV:
         return json.loads(req.text)
 
     def download(self, url):
+        """
         url = self.host + "/api/v1/downloads/" + url.split("/")[4]
         captcha_token = "???" # NEED CAPTCHA TOKEN
         headers = {
@@ -130,5 +149,19 @@ class HanimeTV:
             "auth_kind": "recaptcha",
             "auth": captcha_token
         }
-        req = requests.post(url, headers=headers, json=data)
-        return json.loads(req.text)
+        """
+        if self.session != '':
+            url = self.mapi + "/api/v4/downloads/" + url.split("/")[4]
+            headers = {
+                'accept': 'application/json, text/plain, */*',
+                'x-directive': 'api',
+                'x-claim': '1562264070',
+                'x-signature': 'a592a0f54ba394f906a774666cf459839d74170012df8ded91f9d8776acd0488',
+                'x-session-token': self.session,
+                'accept-encoding': 'gzip',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0',
+            }
+            req = requests.get(url, headers=headers)
+            return json.loads(req.text)
+        else:
+            return "Need Authentication !!!"
