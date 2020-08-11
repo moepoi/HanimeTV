@@ -11,7 +11,7 @@ $ pip3 install -r requirements.txt
 
 ## Usage
 
-```sh
+```py
 from HTV import HanimeTV
 
 hentai = HanimeTV(email="EMAIL", password="PASS")
